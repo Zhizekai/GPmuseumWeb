@@ -23,15 +23,15 @@ export const useUserStore = defineStore('user', {
 
       if(result.code === 200) {
         this.$patch((state)=>{
-          state.user_id = result.data.id
-          state.user_name = result.data.username
-          state.user_token = result.data.token
+          state.user_id = result.data.userId
+          state.user_name = result.data.userName
+          state.user_token = result.data.userToken
           console.log('state==>', state)
         })
 
-        localStorage.setItem(USER_TOKEN, result.data.token)
-        localStorage.setItem(USER_NAME, result.data.username)
-        localStorage.setItem(USER_ID, result.data.id)
+        localStorage.setItem(USER_TOKEN, result.data.userToken)
+        localStorage.setItem(USER_NAME, result.data.userName)
+        localStorage.setItem(USER_ID, result.data.userId)
       }
 
       return result;

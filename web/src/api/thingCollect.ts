@@ -3,9 +3,9 @@ import { get, post } from '/@/utils/http/axios';
 import { UserState } from '/@/store/modules/user/types';
 
 enum URL {
-    userCollectList = '/api/thingCollect/getUserCollectList',
-    collect = '/api/thingCollect/collect',
-    unCollect = '/api/thingCollect/unCollect',
+    userCollectList = '/v1/thingCollect/getUserCollectList',
+    collect = '/v1/thingCollect/collect',
+    unCollect = '/v1/thingCollect/unCollect',
 }
 
 const collectApi = async (data: any) => post<any>({ url: URL.collect, params: {}, data: data, headers: { 'Content-Type': 'multipart/form-data;charset=utf-8' } });

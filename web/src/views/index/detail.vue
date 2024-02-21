@@ -1,88 +1,88 @@
 <template>
-  <div class="detail">
-    <Header/>
+    <div class="detail">
+        <Header/>
 
-    <div class="detail-content">
-      <div class="detail-content-top">
-        <div style="position: relative;">
-          <div class="thing-infos-view">
-            <div class="thing-infos">
-              <div class="thing-img-box">
-                <img :src="detailData.cover"/>
-              </div>
-              <div class="thing-info-box">
-                <div class="thing-state">
-                  <span class="state hidden-sm">宠物状态</span>
-                  <span>上市销售</span>
+        <div class="detail-content">
+            <div class="detail-content-top">
+                <div style="position: relative;">
+                    <div class="thing-infos-view">
+                        <div class="thing-infos">
+                            <div class="thing-img-box">
+                                <img :src="detailData.cover"/>
+                            </div>
+                            <div class="thing-info-box">
+                                <div class="thing-state">
+                                    <span class="state hidden-sm">宠物状态</span>
+                                    <span>上市销售</span>
+                                </div>
+                                <h1 class="thing-name">{{ detailData.antiqueName }}</h1>
+                                <!--                <span>-->
+                                <!--                  <span class="a-price-symbol">¥</span>-->
+                                <!--                  <span class="a-price">{{detailData.price}}</span>-->
+                                <!--                </span>-->
+                                <div class="translators flex-view" style="">
+                                    <span>性别：</span>
+                                    <span class="name">{{ detailData.antiqueInformation }}</span>
+                                </div>
+                                <div class="translators flex-view" style="">
+                                    <span>地址：</span>
+                                    <span class="name">{{ detailData.antiqueAddress }}</span>
+                                </div>
+                                <button class="buy-btn" @click="handleOrder(detailData)">
+                                    <img :src="AddIcon"/>
+                                    <span>立即购买</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="thing-counts hidden-sm">
+                            <div class="count-item flex-view pointer" @click="addToWish()">
+                                <div class="count-img">
+                                    <img :src="WantIcon">
+                                </div>
+                                <div class="count-box flex-view">
+                                    <div class="count-text-box">
+                                        <span class="count-title">加入心愿单</span>
+                                    </div>
+                                    <div class="count-num-box">
+                                        <span class="num-text">{{ detailData.antiqueWishCount }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="count-item flex-view pointer" @click="collect()">
+                                <div class="count-img">
+                                    <img :src="RecommendIcon">
+                                </div>
+                                <div class="count-box flex-view">
+                                    <div class="count-text-box">
+                                        <span class="count-title">收藏</span>
+                                    </div>
+                                    <div class="count-num-box">
+                                        <span class="num-text">{{ detailData.antiqueCollectCount }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="count-item flex-view" @click="share()">
+                                <div class="count-img">
+                                    <img :src="ShareIcon">
+                                </div>
+                                <div class="count-box flex-view">
+                                    <div class="count-text-box">
+                                        <span class="count-title">分享</span>
+                                    </div>
+                                    <div class="count-num-box">
+                                        <span class="num-text"></span>
+                                        <img :src="WeiboShareIcon" class="mg-l">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <h1 class="thing-name">{{ detailData.title }}</h1>
-                <span>
-                  <span class="a-price-symbol">¥</span>
-                  <span class="a-price">{{detailData.price}}</span>
-                </span>
-                <div class="translators flex-view" style="">
-                  <span>性别：</span>
-                  <span class="name">{{ detailData.sex }}</span>
-                </div>
-                <div class="translators flex-view" style="">
-                  <span>地址：</span>
-                  <span class="name">{{ detailData.address }}</span>
-                </div>
-                <button class="buy-btn" @click="handleOrder(detailData)">
-                  <img :src="AddIcon" />
-                  <span>立即购买</span>
-                </button>
-              </div>
             </div>
-            <div class="thing-counts hidden-sm">
-              <div class="count-item flex-view pointer" @click="addToWish()">
-                <div class="count-img">
-                  <img :src="WantIcon">
-                </div>
-                <div class="count-box flex-view">
-                  <div class="count-text-box">
-                    <span class="count-title">加入心愿单</span>
-                  </div>
-                  <div class="count-num-box">
-                    <span class="num-text">{{ detailData.wishCount }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="count-item flex-view pointer" @click="collect()">
-                <div class="count-img">
-                  <img :src="RecommendIcon">
-                </div>
-                <div class="count-box flex-view">
-                  <div class="count-text-box">
-                    <span class="count-title">收藏</span>
-                  </div>
-                  <div class="count-num-box">
-                    <span class="num-text">{{ detailData.collectCount }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="count-item flex-view" @click="share()">
-                <div class="count-img">
-                  <img :src="ShareIcon">
-                </div>
-                <div class="count-box flex-view">
-                  <div class="count-text-box">
-                    <span class="count-title">分享</span>
-                  </div>
-                  <div class="count-num-box">
-                    <span class="num-text"></span>
-                    <img :src="WeiboShareIcon" class="mg-l">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="detail-content-bottom">
-        <div class="thing-content-view flex-view">
-          <div class="main-content">
-            <div class="order-view main-tab">
+            <div class="detail-content-bottom">
+                <div class="thing-content-view flex-view">
+                    <div class="main-content">
+                        <div class="order-view main-tab">
           <span class="tab"
                 :class="selectTabIndex===index? 'tab-select':''"
                 v-for="(item,index) in tabData"
@@ -90,79 +90,81 @@
                 @click="selectTab(index)">
             {{ item }}
           </span>
-              <span :style="{left: tabUnderLeft + 'px'}" class="tab-underline"></span>
-            </div>
+                            <span :style="{left: tabUnderLeft + 'px'}" class="tab-underline"></span>
+                        </div>
 
-            <!--简介-->
-            <div class="thing-intro" :class="selectTabIndex <= 0? '':'hide'">
-              <p class="text" style="">{{ detailData.description }}</p>
-            </div>
+                        <!--简介-->
+                        <div class="thing-intro" :class="selectTabIndex <= 0? '':'hide'">
+                            <p class="text" style="">{{ detailData.antiqueInformation }}</p>
+                        </div>
 
-            <!--评论-->
-            <div class="thing-comment" :class="selectTabIndex > 0? '':'hide'">
-              <div class="title">发表新的评论</div>
-              <div class="publish flex-view">
-                <img :src="AvatarIcon" class="mine-img">
-                <input placeholder="说点什么..." class="content-input" ref="commentRef">
-                <button class="send-btn" @click="sendComment()">发送</button>
-              </div>
-              <div class="tab-view flex-view">
-                <div class="count-text">共有{{ commentData.length }}条评论</div>
-                <div class="tab-box flex-view" v-if="commentData.length > 0">
-                  <span :class="sortIndex === 0? 'tab-select': ''" @click="sortCommentList('recent')">最新</span>
-                  <div class="line"></div>
-                  <span :class="sortIndex === 1? 'tab-select': ''" @click="sortCommentList('hot')">热门</span>
-                </div>
-              </div>
-              <div class="comments-list">
-                <div class="comment-item" v-for="item in commentData">
-                  <div class="flex-item flex-view">
-                    <img :src="AvatarIcon" class="avator">
-                    <div class="person">
-                      <div class="name">{{ item.username }}</div>
-                      <div class="time">{{ item.commentTime }}</div>
-                    </div>
-                    <div class="float-right">
-                      <span @click="like(item.id)">推荐</span>
-                      <span class="num">{{ item.likeCount }}</span>
-                    </div>
-                  </div>
-                  <p class="comment-content">{{ item.content }}</p>
-                </div>
-                <div class="infinite-loading-container">
-                  <div class="infinite-status-prompt" style="">
-                    <div slot="no-results" class="no-results">
-                      <div></div>
-                      <p>没有更多了</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                        <!--评论-->
+                        <div class="thing-comment" :class="selectTabIndex > 0? '':'hide'">
+                            <div class="title">发表新的评论</div>
+                            <div class="publish flex-view">
+                                <img :src="AvatarIcon" class="mine-img">
+                                <input placeholder="说点什么..." class="content-input" ref="commentRef">
+                                <button class="send-btn" @click="sendComment()">发送</button>
+                            </div>
+                            <div class="tab-view flex-view">
+                                <div class="count-text">共有{{ commentData.length }}条评论</div>
+                                <div class="tab-box flex-view" v-if="commentData.length > 0">
+                                    <span :class="sortIndex === 0? 'tab-select': ''" @click="sortCommentList('recent')">最新</span>
+                                    <div class="line"></div>
+                                    <span :class="sortIndex === 1? 'tab-select': ''"
+                                          @click="sortCommentList('hot')">热门</span>
+                                </div>
+                            </div>
+                            <div class="comments-list">
+                                <div class="comment-item" v-for="item in commentData">
+                                    <div class="flex-item flex-view">
+                                        <img :src="AvatarIcon" class="avator">
+                                        <div class="person">
+                                            <div class="name">{{ item.username }}</div>
+                                            <div class="time">{{ item.commentTime }}</div>
+                                        </div>
+                                        <div class="float-right">
+                                            <span @click="like(item.commentId)">推荐</span>
+                                            <span class="num">{{ item.likeCount }}</span>
+                                        </div>
+                                    </div>
+                                    <p class="comment-content">{{ item.content }}</p>
+                                </div>
+                                <div class="infinite-loading-container">
+                                    <div class="infinite-status-prompt" style="">
+                                        <div slot="no-results" class="no-results">
+                                            <div></div>
+                                            <p>没有更多了</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-          </div>
-          <div class="recommend" style="">
-            <div class="title">热门推荐</div>
-            <div class="things">
-              <div class="thing-item thing-item" v-for="item in recommendData" @click="handleDetail(item)">
-                <div class="img-view">
-                  <img :src="item.cover"></div>
-                <div class="info-view">
-                  <h3 class="thing-name">{{ item.title.substring(0, 12)}}</h3>
-                  <span>
+                    </div>
+                    <div class="recommend" style="">
+                        <div class="title">热门推荐</div>
+                        <div class="things">
+                            <div class="thing-item thing-item" v-for="item in recommendData"
+                                 @click="handleDetail(item)">
+                                <div class="img-view">
+                                    <img :src="item.cover"></div>
+                                <div class="info-view">
+                                    <h3 class="thing-name">{{ item.title.substring(0, 12) }}</h3>
+                                    <span>
                     <span class="a-price-symbol">¥</span>
-                    <span class="a-price">{{item.price}}</span>
+                    <span class="a-price">{{ item.price }}</span>
                   </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
 
-    <Footer/>
-  </div>
+        <Footer/>
+    </div>
 </template>
 <script setup>
 import {message} from "ant-design-vue";
@@ -175,13 +177,13 @@ import ShareIcon from '/@/assets/images/share-icon.svg';
 import WeiboShareIcon from '/@/assets/images/wb-share.svg';
 import AvatarIcon from '/@/assets/images/avatar.jpg';
 import {
-  detailApi,
-  listApi as listThingList,
+    detailApi,
+    listApi as listThingList,
 } from '/@/api/thing'
 import {listThingCommentsApi, createApi as createCommentApi, likeApi} from '/@/api/comment'
 import {wishApi} from '/@/api/thingWish'
 import {collectApi} from '/@/api/thingCollect'
-import {BASE_URL} from "/@/store/constants";
+import {BASE_URL, IMG_BASE} from "/@/store/constants";
 import {useRoute, useRouter} from "vue-router/dist/vue-router";
 import {useUserStore} from "/@/store";
 import {getFormatTime} from "/@/utils";
@@ -204,132 +206,136 @@ let order = ref('recent') // 默认排序最新
 
 let commentRef = ref()
 
-onMounted(()=>{
-  thingId.value = route.query.id.trim()
-  getThingDetail()
-  getRecommendThing()
-  getCommentList()
+onMounted(() => {
+    // 从url中获取古董id
+    thingId.value = route.query.antiqueId.trim()
+    getThingDetail()
+    getRecommendThing()
+    getCommentList()
 })
 
-const selectTab =(index)=> {
-  selectTabIndex.value = index
-  tabUnderLeft.value = 6 + 54 * index
+const selectTab = (index) => {
+    selectTabIndex.value = index
+    tabUnderLeft.value = 6 + 54 * index
 }
 
-const getThingDetail =()=> {
-  detailApi({id: thingId.value}).then(res => {
-    detailData.value = res.data
-    detailData.value.cover = BASE_URL + '/api/staticfiles/image/' + detailData.value.cover
-  }).catch(err => {
-    message.error('获取详情失败')
-  })
-}
-const addToWish =()=> {
-  let userId = userStore.user_id
-  if (userId) {
-    wishApi({thingId: thingId.value, userId: userId}).then(res => {
-      message.success(res.msg)
-      getThingDetail()
+const getThingDetail = () => {
+    detailApi({antiqueId: thingId.value}).then(res => {
+        detailData.value = res.data
+        detailData.value.cover = BASE_URL + IMG_BASE + detailData.value.antiqueImg
     }).catch(err => {
-      console.log('操作失败')
+        message.error('获取详情失败')
     })
-  } else {
-    message.warn('请先登录')
-  }
 }
-const collect =()=> {
-  let userId = userStore.user_id
-  if (userId) {
-    collectApi({thingId: thingId.value, userId: userId}).then(res => {
-      message.success(res.msg)
-      getThingDetail()
+const addToWish = () => {
+    let userId = userStore.user_id
+    if (userId) {
+        wishApi({thingId: thingId.value, userId: userId}).then(res => {
+            message.success(res.msg)
+            getThingDetail()
+        }).catch(err => {
+            console.log('操作失败')
+        })
+    } else {
+        message.warn('请先登录')
+    }
+}
+/* 添加收藏*/
+const collect = () => {
+    let userId = userStore.user_id
+    if (userId) {
+        collectApi({antiqueId: thingId.value, userId: userId}).then(res => {
+            message.success(res.msg)
+            getThingDetail()
+        }).catch(err => {
+            console.log('收藏失败')
+        })
+    } else {
+        message.warn('请先登录')
+    }
+}
+const share = () => {
+    let content = '分享一个非常好玩的网站 ' + window.location.href
+    let shareHref = 'http://service.weibo.com/share/share.php?title=' + content
+    window.open(shareHref)
+}
+const handleOrder = (detailData) => {
+    console.log(detailData)
+    const userId = userStore.user_id
+    router.push({
+        name: 'confirm',
+        query:
+            {
+                id: detailData.id,
+                title: detailData.title,
+                cover: detailData.cover,
+                price: detailData.price
+            }
+    })
+}
+const getRecommendThing = () => {
+    listThingList({sort: 'recommend'}).then(res => {
+        res.data.forEach((item, index) => {
+            if (item.cover) {
+                item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover
+            }
+        })
+        console.log(res)
+        recommendData.value = res.data.slice(0, 6)
     }).catch(err => {
-      console.log('收藏失败')
+        console.log(err)
     })
-  } else {
-    message.warn('请先登录')
-  }
 }
-const share =()=> {
-  let content = '分享一个非常好玩的网站 ' + window.location.href
-  let shareHref = 'http://service.weibo.com/share/share.php?title=' + content
-  window.open(shareHref)
+const handleDetail = (item) => {
+    // 跳转新页面
+    let text = router.resolve({name: 'detail', query: {id: item.id}})
+    window.open(text.href, '_blank')
 }
-const handleOrder =(detailData)=> {
-  console.log(detailData)
-  const userId = userStore.user_id
-  router.push({name: 'confirm',
-    query:
-        {
-          id: detailData.id,
-          title: detailData.title,
-          cover: detailData.cover,
-          price: detailData.price
-        }})
+const sendComment = () => {
+    console.log(commentRef.value)
+    let text = commentRef.value.value.trim()
+    console.log(text)
+    if (text.length <= 0) {
+        return
+    }
+    commentRef.value.value = ''
+    let userId = userStore.user_id
+    if (userId) {
+        createCommentApi({content: text, thingId: thingId.value, userId: userId}).then(res => {
+            getCommentList()
+        }).catch(err => {
+            console.log(err)
+        })
+    } else {
+        message.warn('请先登录！')
+        router.push({name: 'login'})
+    }
 }
-const getRecommendThing =()=> {
-  listThingList({sort: 'recommend'}).then(res => {
-    res.data.forEach((item, index) => {
-      if (item.cover) {
-        item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover
-      }
-    })
-    console.log(res)
-    recommendData.value = res.data.slice(0, 6)
-  }).catch(err => {
-    console.log(err)
-  })
-}
-const handleDetail =(item)=> {
-  // 跳转新页面
-  let text = router.resolve({name: 'detail', query: {id: item.id}})
-  window.open(text.href, '_blank')
-}
-const sendComment =()=> {
-  console.log(commentRef.value)
-  let text = commentRef.value.value.trim()
-  console.log(text)
-  if (text.length <= 0) {
-    return
-  }
-  commentRef.value.value = ''
-  let userId = userStore.user_id
-  if (userId) {
-    createCommentApi({content: text, thingId: thingId.value, userId: userId}).then(res => {
-      getCommentList()
+const like = (commentId) => {
+    likeApi({id: commentId}).then(res => {
+        getCommentList()
     }).catch(err => {
-      console.log(err)
+        console.log(err)
     })
-  } else {
-    message.warn('请先登录！')
-    router.push({name: 'login'})
-  }
 }
-const like =(commentId)=> {
-  likeApi({id: commentId}).then(res => {
+const getCommentList = () => {
+    listThingCommentsApi({thingId: thingId.value, order: order.value}).then(res => {
+        res.data.forEach(item => {
+            item.commentTime = getFormatTime(item.commentTime, true)
+        })
+        commentData.value = res.data
+    }).catch(err => {
+        console.log(err)
+    })
+}
+const sortCommentList = (sortType) => {
+    if (sortType === 'recent') {
+        sortIndex.value = 0
+    } else {
+        sortIndex.value = 1
+    }
+    order.value = sortType
     getCommentList()
-  }).catch(err => {
-    console.log(err)
-  })
-}
-const getCommentList =()=> {
-  listThingCommentsApi({thingId: thingId.value, order: order.value}).then(res => {
-    res.data.forEach(item => {
-      item.commentTime = getFormatTime(item.commentTime, true)
-    })
-    commentData.value = res.data
-  }).catch(err => {
-    console.log(err)
-  })
-}
-const sortCommentList =(sortType)=> {
-  if (sortType === 'recent') {
-    sortIndex.value = 0
-  } else {
-    sortIndex.value = 1
-  }
-  order.value = sortType
-  getCommentList()
 }
 
 </script>
@@ -451,12 +457,12 @@ const sortCommentList =(sortType)=> {
   .thing-name {
     line-height: 32px;
     margin: 16px 0;
-    color: #0F1111!important;
-    font-size: 18px!important;
-    font-weight: 400!important;
-    font-style: normal!important;
-    text-transform: none!important;
-    text-decoration: none!important;
+    color: #0F1111 !important;
+    font-size: 18px !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    text-transform: none !important;
+    text-decoration: none !important;
   }
 
   .translators, .authors {
@@ -709,15 +715,16 @@ const sortCommentList =(sortType)=> {
         //background: #f6f9fb;
         overflow: hidden;
         padding: 0 16px;
+
         .thing-name {
           line-height: 32px;
           margin-top: 12px;
-          color: #0F1111!important;
-          font-size: 15px!important;
-          font-weight: 400!important;
-          font-style: normal!important;
-          text-transform: none!important;
-          text-decoration: none!important;
+          color: #0F1111 !important;
+          font-size: 15px !important;
+          font-weight: 400 !important;
+          font-style: normal !important;
+          text-transform: none !important;
+          text-decoration: none !important;
         }
 
         .price {
@@ -930,8 +937,9 @@ const sortCommentList =(sortType)=> {
   top: -0.5em;
   font-size: 12px;
 }
+
 .a-price {
   color: #0F1111;
-  font-size:21px;
+  font-size: 21px;
 }
 </style>

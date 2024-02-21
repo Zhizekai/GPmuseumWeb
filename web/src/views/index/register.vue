@@ -1,49 +1,51 @@
 <template>
-  <div class="container">
+    <div class="container">
 
-    <div class="tel-regist-page pc-style">
-      <div class="regist-title">
-        <span>注册新账号</span>
-        <span @click="router.push({name:'login'})" class="toWxLogin">我要登录</span>
-      </div>
+        <div class="tel-regist-page pc-style">
+            <div class="regist-title">
+                <span>注册新账号</span>
+                <span @click="router.push({name:'login'})" class="toWxLogin">我要登录</span>
+            </div>
 
-      <div class="regist-padding">
-        <div class="common-input">
-          <img :src="MailIcon" class="left-icon">
-          <div class="input-view">
-            <input placeholder="请输入邮箱" v-model="tData.loginForm.username" type="text" class="input">
-            <p class="err-view">
-            </p>
-          </div>
+            <div class="regist-padding">
+                <div class="common-input">
+                    <img :src="MailIcon" class="left-icon">
+                    <div class="input-view">
+                        <input placeholder="请输入邮箱" v-model="tData.loginForm.username" type="text" class="input">
+                        <p class="err-view">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="regist-padding">
+                <div class="common-input">
+                    <img :src="PwdIcon" class="left-icon">
+                    <div class="input-view">
+                        <input placeholder="请输入密码" v-model="tData.loginForm.password" type="password"
+                               class="input">
+                        <p class="err-view">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="regist-padding">
+                <div class="common-input">
+                    <img :src="PwdIcon" class="left-icon">
+                    <div class="input-view">
+                        <input placeholder="请再次输入密码" v-model="tData.loginForm.repassword" type="password"
+                               class="input">
+                        <p class="err-view">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="tel-login">
+                <div class="next-btn-view">
+                    <button class="next-btn" @click="handleRegister">注册</button>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="regist-padding">
-        <div class="common-input">
-          <img :src="PwdIcon" class="left-icon">
-          <div class="input-view">
-            <input placeholder="请输入密码" v-model="tData.loginForm.password" type="password" class="input">
-            <p class="err-view">
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="regist-padding">
-        <div class="common-input">
-          <img :src="PwdIcon" class="left-icon">
-          <div class="input-view">
-            <input placeholder="请再次输入密码" v-model="tData.loginForm.repassword" type="password" class="input">
-            <p class="err-view">
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="tel-login">
-        <div class="next-btn-view">
-          <button class="next-btn" @click="handleRegister">注册</button>
-        </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -55,32 +57,32 @@ import PwdIcon from '/@/assets/images/pwd-icon.svg';
 const router = useRouter();
 
 const tData = reactive({
-  loginForm: {
-    username: '',
-    password: '',
-    repassword: ''
-  }
+    loginForm: {
+        username: '',
+        password: '',
+        repassword: ''
+    }
 })
 
 const handleRegister = () => {
-  console.log('login')
-  if(tData.loginForm.username === ''
-    || tData.loginForm.password === ''
-    || tData.loginForm.repassword === ''){
-    message.warn('不能为空！')
-    return;
-  }
+    console.log('login')
+    if (tData.loginForm.username === ''
+        || tData.loginForm.password === ''
+        || tData.loginForm.repassword === '') {
+        message.warn('不能为空！')
+        return;
+    }
 
-  userRegisterApi({
-    username: tData.loginForm.username,
-    password: tData.loginForm.password,
-    rePassword: tData.loginForm.repassword
-  }).then(res => {
-    message.success('注册成功！')
-    router.push({name: 'login'})
-  }).catch(err => {
-    message.error(err.msg || '注册失败')
-  })
+    userRegisterApi({
+        userName: tData.loginForm.username,
+        userPassword: tData.loginForm.password,
+        userRePassword: tData.loginForm.repassword
+    }).then(res => {
+        message.success('注册成功！')
+        router.push({name: 'login'})
+    }).catch(err => {
+        message.error(err.msg || '注册失败')
+    })
 }
 
 
@@ -108,9 +110,9 @@ div {
   object-fit: cover;
   height: 100vh;
   overflow: hidden;
-  display:flex;
+  display: flex;
   justify-content: center;
-  align-items:center;
+  align-items: center;
 }
 
 .pc-style {

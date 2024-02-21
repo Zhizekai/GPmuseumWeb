@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import {message} from 'ant-design-vue';
 import {userCollectListApi, unCollectApi} from '/@/api/thingCollect'
-import {BASE_URL} from "/@/store/constants";
+import {BASE_URL, IMG_BASE} from "/@/store/constants";
 import {useUserStore} from "/@/store";
 
 const router = useRouter();
@@ -41,7 +41,7 @@ onMounted(()=>{
 })
 
 const handleClickItem =(record) =>{
-  let text = router.resolve({name: 'detail', query: {id: record.id}})
+  let text = router.resolve({name: 'detail', query: {antiqueId: record.antiqueId}})
   window.open(text.href, '_blank')
 }
 const handleRemove =(record)=> {
@@ -57,7 +57,7 @@ const getCollectThingList =()=> {
   let userId = userStore.user_id
   userCollectListApi({userId: userId}).then(res => {
     res.data.forEach(item => {
-      item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover
+      item.cover = BASE_URL + IMG_BASE + item.antiqueImg
     })
     console.log(res.data)
     pageData.collectData = res.data

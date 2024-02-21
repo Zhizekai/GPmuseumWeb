@@ -17,11 +17,11 @@
               <div class="img-view">
                 <img :src="item.cover"></div>
               <div class="info-view">
-                <h3 class="thing-name">{{ item.title.substring(0, 12) }}</h3>
-                <span>
-                  <span class="a-price-symbol">¥</span>
-                  <span class="a-price">{{ item.price }}</span>
-                </span>
+                <h3 class="thing-name">{{ item.antiqueName.substring(0, 12) }}</h3>
+<!--                <span>-->
+<!--                  <span class="a-price-symbol">¥</span>-->
+<!--                  <span class="a-price">{{ item.price }}</span>-->
+<!--                </span>-->
               </div>
             </div>
           </div>
@@ -37,7 +37,7 @@
 
 <script setup>
 import {listApi as listThingList} from '/@/api/thing'
-import {BASE_URL} from "/@/store/constants";
+import {BASE_URL,IMG_BASE} from "/@/store/constants";
 import {useUserStore} from "/@/store";
 
 const userStore = useUserStore()
@@ -67,7 +67,7 @@ watch(() => route.query, (newPath, oldPath) => {
 
 const search = () => {
   tData.keyword = route.query.keyword.trim()
-  getThingList({'keyword': tData.keyword})
+  getThingList({'antiqueName': tData.keyword})
 }
 
 // 分页事件
@@ -86,8 +86,8 @@ const getThingList = (data) => {
   tData.loading = true
   listThingList(data).then(res => {
     res.data.forEach((item, index) => {
-      if (item.cover) {
-        item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover
+      if (item.antiqueImg) {
+        item.cover = BASE_URL + IMG_BASE + item.antiqueImg
       }
     })
     tData.thingData = res.data

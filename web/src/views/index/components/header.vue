@@ -58,14 +58,14 @@
                     <!---->
                     <div class="content-box">
                       <div class="header">
-                        <span class="title-txt">{{item.title}}</span>
+                        <span class="title-txt">{{item.noticeTitle}}</span>
                         <br/>
-                        <span class="time">{{ item.create_time }}</span>
+                        <span class="time">{{ item.createTime }}</span>
                       </div>
                       <div class="head-text">
                       </div>
                       <div class="content">
-                        <p>{{ item.content }}</p>
+                        <p>{{ item.noticeContent }}</p>
                       </div>
                     </div>
                   </div>
@@ -96,7 +96,13 @@ const keywordRef = ref()
 
 let loading = ref(false)
 let msgVisible = ref(false)
-let msgData = ref([] as any)
+
+type msgDataType = {
+    noticeTitle:string,
+    createTime:string,
+    noticeContent:string
+}
+let msgData:msgDataType[] = ref([] as any)
 
 onMounted(()=>{
   getMessageList()

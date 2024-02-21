@@ -1,43 +1,45 @@
 <template>
-  <div class="container">
-    <div class="login-page pc-style">
-      <img :src="LogoIcon" alt="logo" class="logo-icon">
-      <div class="login-tab">
-        <div class="tab-selected">
-          <span>邮箱登录</span>
-          <span class="tabline tabline-width"></span>
+    <div class="container">
+        <div class="login-page pc-style">
+            <img :src="LogoIcon" alt="logo" class="logo-icon">
+            <div class="login-tab">
+                <div class="tab-selected">
+                    <span>邮箱登录</span>
+                    <span class="tabline tabline-width"></span>
+                </div>
+            </div>
+            <div class="mail-login" type="login">
+                <div class="common-input">
+                    <img :src="MailIcon" class="left-icon">
+                    <div class="input-view">
+                        <input placeholder="请输入注册邮箱" v-model="pageData.loginForm.username" type="text"
+                               class="input">
+                        <p class="err-view">
+                        </p>
+                    </div>
+                    <!---->
+                </div>
+                <div class="common-input">
+                    <img :src="PwdIcon" class="left-icon">
+                    <div class="input-view">
+                        <input placeholder="请输入密码" v-model="pageData.loginForm.password" type="password"
+                               class="input">
+                        <p class="err-view">
+                        </p>
+                    </div>
+                    <!--          <img src="@/assets/pwd-hidden.svg" class="right-icon">-->
+                    <!---->
+                </div>
+                <div class="next-btn-view">
+                    <button class="next-btn btn-active" style="margin: 16px 0px;" @click="handleLogin">登录</button>
+                </div>
+            </div>
+            <div class="operation">
+                <a @click="handleCreateUser" class="forget-pwd" style="text-align: left;">注册新帐号</a>
+                <a class="forget-pwd" style="text-align: right;">忘记密码？</a>
+            </div>
         </div>
-      </div>
-      <div class="mail-login" type="login">
-        <div class="common-input">
-          <img :src="MailIcon" class="left-icon">
-          <div class="input-view">
-            <input placeholder="请输入注册邮箱" v-model="pageData.loginForm.username" type="text" class="input">
-            <p class="err-view">
-            </p>
-          </div>
-          <!---->
-        </div>
-        <div class="common-input">
-          <img :src="PwdIcon" class="left-icon">
-          <div class="input-view">
-            <input placeholder="请输入密码" v-model="pageData.loginForm.password" type="password" class="input">
-            <p class="err-view">
-            </p>
-          </div>
-<!--          <img src="@/assets/pwd-hidden.svg" class="right-icon">-->
-          <!---->
-        </div>
-        <div class="next-btn-view">
-          <button class="next-btn btn-active" style="margin: 16px 0px;" @click="handleLogin">登录</button>
-        </div>
-      </div>
-      <div class="operation">
-        <a @click="handleCreateUser" class="forget-pwd" style="text-align: left;">注册新帐号</a>
-        <a class="forget-pwd" style="text-align: right;">忘记密码？</a>
-      </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -52,33 +54,33 @@ const router = useRouter();
 const userStore = useUserStore();
 
 const pageData = reactive({
-  loginForm: {
-    username: '',
-    password: ''
-  }
+    loginForm: {
+        username: '',
+        password: ''
+    }
 })
 
-const handleLogin = ()=> {
-  userStore.login({
-    username: pageData.loginForm.username,
-    password: pageData.loginForm.password
-  }).then(res=> {
-    loginSuccess()
-    console.log('success==>', userStore.user_name)
-    console.log('success==>', userStore.user_id)
-    console.log('success==>', userStore.user_token)
-  }).catch(err => {
-    message.warn(err.msg || '登录失败')
-  })
+const handleLogin = () => {
+    userStore.login({
+        userName: pageData.loginForm.username,
+        userPassword: pageData.loginForm.password
+    }).then(res => {
+        loginSuccess()
+        console.log('success==>', userStore.user_name)
+        console.log('success==>', userStore.user_id)
+        console.log('success==>', userStore.user_token)
+    }).catch(err => {
+        message.warn(err.msg || '登录失败')
+    })
 }
 
 const handleCreateUser = () => {
-  router.push({name:'register'})
+    router.push({name: 'register'})
 }
 
-const loginSuccess= ()=> {
-  router.push({ name: 'portal' })
-  message.success('登录成功！')
+const loginSuccess = (): any => {
+    router.push({name: 'portal'})
+    message.success('登录成功！')
 }
 
 
@@ -90,14 +92,14 @@ div {
 
 .container {
   //background-color: #f1f1f1;
-  background-image: url('../images/admin-login-bg.jpg');
+  background-image: url('/public/images/admin-login-bg.jpg');
   background-size: cover;
   object-fit: cover;
   height: 100%;
   max-width: 100%;
-  display:flex;
+  display: flex;
   justify-content: center;
-  align-items:center;
+  align-items: center;
 }
 
 .new-content {
@@ -264,7 +266,7 @@ button, input, select, textarea {
   //text-align: center;
   display: block;
   overflow: hidden;
-  flex:1;
+  flex: 1;
   margin: 0 auto;
   color: #3d5b96;
   font-size: 14px;

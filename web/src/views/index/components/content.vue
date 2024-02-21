@@ -9,9 +9,9 @@
       </div>
       <div class="left-search-item"><h4>热门标签</h4>
         <div class="tag-view tag-flex-view">
-            <span class="tag" :class="{'tag-select': contentData.selectTagId===item.id}"
-                  v-for="item in contentData.tagData" :key="item.id"
-                  @click="clickTag(item.id)">{{ item.title }}</span>
+            <span class="tag" :class="{'tag-select': contentData.selectTagId===item.tagId}"
+                  v-for="item in contentData.tagData" :key="item.tagId"
+                  @click="clickTag(item.tagId)">{{ item.tagTitle }}</span>
         </div>
       </div>
     </div>
@@ -31,16 +31,16 @@
       </div>
       <a-spin :spinning="contentData.loading" style="min-height: 200px;">
         <div class="pc-thing-list flex-view">
-          <div v-for="item in contentData.pageData" :key="item.id" @click="handleDetail(item)"
+          <div v-for="item in contentData.pageData" :key="item.antiqueId" @click="handleDetail(item)"
                class="thing-item item-column-3"><!---->
             <div class="img-view">
               <img :src="item.cover"></div>
             <div class="info-view">
-              <h3 class="thing-name">{{ item.title.substring(0, 12) }}</h3>
-              <span>
-                <span class="a-price-symbol">¥</span>
-                <span class="a-price">{{ item.price }}</span>
-              </span>
+              <h3 class="thing-name">{{ item.antiqueName.substring(0, 12) }}</h3>
+<!--              <span>-->
+<!--                <span class="a-price-symbol">¥</span>-->
+<!--                <span class="a-price">{{ item.price }}</span>-->
+<!--              </span>-->
             </div>
           </div>
           <div v-if="contentData.pageData.length <= 0 && !contentData.loading" class="no-data" style="">暂无数据</div>
@@ -58,7 +58,7 @@
 import {listApi as listClassificationList} from '/@/api/classification'
 import {listApi as listTagList} from '/@/api/tag'
 import {listApi as listThingList} from '/@/api/thing'
-import {BASE_URL} from "/@/store/constants";
+import {BASE_URL, IMG_BASE} from "/@/store/constants";
 import {useUserStore} from "/@/store";
 
 const userStore = useUserStore()
@@ -90,10 +90,11 @@ onMounted(() => {
 })
 
 const initSider = () => {
-  contentData.cData.push({key:'-1', title:'全部'})
+  contentData.cData.push({key:'', title:'全部'})
   listClassificationList().then(res => {
     res.data.forEach(item=>{
-      item.key = item.id
+      item.key = item.categoryId
+      item.title = item.categoryName
       contentData.cData.push(item)
     })
   })
@@ -109,18 +110,22 @@ const getSelectedKey = () => {
     return -1
   }
 }
+
+/* 点击分类*/
 const onSelect = (selectedKeys) => {
   contentData.selectedKeys = selectedKeys
   console.log(contentData.selectedKeys[0])
   if (contentData.selectedKeys.length > 0) {
-    getThingList({c: getSelectedKey()})
+    getThingList({antiqueCategoryId: getSelectedKey()})
   }
   contentData.selectTagId = -1
 }
+
+/* 点击标签*/
 const clickTag = (index) => {
   contentData.selectedKeys = []
   contentData.selectTagId = index
-  getThingList({tag: contentData.selectTagId})
+  getThingList({antiqueTag: contentData.selectTagId})
 }
 
 // 最新|最热|推荐
@@ -133,13 +138,13 @@ const selectTab = (index) => {
   if (contentData.selectTagId !== -1) {
     data['tag'] = contentData.selectTagId
   } else {
-    data['c'] = getSelectedKey()
+    data['antiqueCategoryId'] = getSelectedKey()
   }
   getThingList(data)
 }
 const handleDetail = (item) => {
   // 跳转新页面
-  let text = router.resolve({name: 'detail', query: {id: item.id}})
+  let text = router.resolve({name: 'detail', query: {antiqueId: item.antiqueId}})
   window.open(text.href, '_blank')
 }
 // 分页事件
@@ -154,8 +159,9 @@ const getThingList = (data) => {
   listThingList(data).then(res => {
     contentData.loading = false
     res.data.forEach((item, index) => {
-      if (item.cover) {
-        item.cover = BASE_URL + '/api/staticfiles/image/' +  item.cover
+      if (item.antiqueImg) {
+        // item.cover = BASE_URL + '/api/staticfiles/image/' +  item.cover
+        item.cover = BASE_URL + IMG_BASE +  item.antiqueImg
       }
     })
     console.log(res)
