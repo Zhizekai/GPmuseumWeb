@@ -1,57 +1,60 @@
 <template>
-  <div class="content">
-    <div class="content-left">
-      <div class="left-search-item">
-        <h4>宠物分类</h4>
-        <a-tree :tree-data="contentData.cData" :selected-keys="contentData.selectedKeys" @select="onSelect"
-                style="min-height: 220px;">
-        </a-tree>
-      </div>
-      <div class="left-search-item"><h4>热门标签</h4>
-        <div class="tag-view tag-flex-view">
+    <div class="content">
+        <div class="content-left">
+            <div class="left-search-item">
+                <h4>宠物分类</h4>
+                <a-tree :tree-data="contentData.cData" :selected-keys="contentData.selectedKeys" @select="onSelect"
+                        style="min-height: 220px;">
+                </a-tree>
+            </div>
+            <div class="left-search-item"><h4>热门标签</h4>
+                <div class="tag-view tag-flex-view">
             <span class="tag" :class="{'tag-select': contentData.selectTagId===item.tagId}"
                   v-for="item in contentData.tagData" :key="item.tagId"
                   @click="clickTag(item.tagId)">{{ item.tagTitle }}</span>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="content-right">
-      <div class="top-select-view flex-view">
-        <div class="order-view">
-          <span class="title"></span>
-          <span class="tab"
-                :class="contentData.selectTabIndex===index? 'tab-select':''"
-                v-for="(item,index) in contentData.tabData"
-                :key="index"
-                @click="selectTab(index)">
+        <div class="content-right">
+            <div class="top-select-view flex-view">
+                <div class="order-view">
+                    <span class="title"></span>
+                    <span class="tab"
+                          :class="contentData.selectTabIndex===index? 'tab-select':''"
+                          v-for="(item,index) in contentData.tabData"
+                          :key="index"
+                          @click="selectTab(index)">
             {{ item }}
           </span>
-          <span :style="{left: contentData.tabUnderLeft + 'px'}" class="tab-underline"></span>
-        </div>
-      </div>
-      <a-spin :spinning="contentData.loading" style="min-height: 200px;">
-        <div class="pc-thing-list flex-view">
-          <div v-for="item in contentData.pageData" :key="item.antiqueId" @click="handleDetail(item)"
-               class="thing-item item-column-3"><!---->
-            <div class="img-view">
-              <img :src="item.cover"></div>
-            <div class="info-view">
-              <h3 class="thing-name">{{ item.antiqueName.substring(0, 12) }}</h3>
-<!--              <span>-->
-<!--                <span class="a-price-symbol">¥</span>-->
-<!--                <span class="a-price">{{ item.price }}</span>-->
-<!--              </span>-->
+                    <span :style="{left: contentData.tabUnderLeft + 'px'}" class="tab-underline"></span>
+                </div>
             </div>
-          </div>
-          <div v-if="contentData.pageData.length <= 0 && !contentData.loading" class="no-data" style="">暂无数据</div>
+            <a-spin :spinning="contentData.loading" style="min-height: 200px;">
+                <div class="pc-thing-list flex-view">
+                    <div v-for="item in contentData.pageData" :key="item.antiqueId" @click="handleDetail(item)"
+                         class="thing-item item-column-3"><!---->
+                        <div class="img-view">
+                            <img :src="item.cover"></div>
+                        <div class="info-view">
+                            <h3 class="thing-name">{{ item.antiqueName.substring(0, 12) }}</h3>
+                            <!--              <span>-->
+                            <!--                <span class="a-price-symbol">¥</span>-->
+                            <!--                <span class="a-price">{{ item.price }}</span>-->
+                            <!--              </span>-->
+                        </div>
+                    </div>
+                    <div v-if="contentData.pageData.length <= 0 && !contentData.loading" class="no-data" style="">
+                        暂无数据
+                    </div>
+                </div>
+            </a-spin>
+            <div class="page-view" style="">
+                <a-pagination v-model="contentData.page" @change="changePage" :hideOnSinglePage="true" show-quick-jumper
+                              :defaultPageSize="contentData.pageSize" :total="contentData.total"
+                              :showSizeChanger="false"/>
+            </div>
         </div>
-      </a-spin>
-      <div class="page-view" style="">
-        <a-pagination v-model="contentData.page" size="small" @change="changePage" :hideOnSinglePage="true"
-                      :defaultPageSize="contentData.pageSize" :total="contentData.total" :showSizeChanger="false"/>
-      </div>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -65,113 +68,119 @@ const userStore = useUserStore()
 const router = useRouter();
 
 const contentData = reactive({
-  selectX: 0,
-  selectTagId: -1,
-  cData: [],
-  selectedKeys: [],
-  tagData: [],
-  loading: false,
+    selectX: 0,
+    selectTagId: -1,
+    cData: [],
+    selectedKeys: [],
+    tagData: [],
+    loading: false,
 
-  tabData: ['最新', '最热', '推荐'],
-  selectTabIndex: 0,
-  tabUnderLeft: 12,
+    tabData: ['最新', '最热', '推荐'],
+    selectTabIndex: 0,
+    tabUnderLeft: 12,
 
-  thingData: [],
-  pageData: [],
+    thingData: [],
+    pageData: [],
 
-  page: 1,
-  total: 0,
-  pageSize: 12,
+    page: 1,
+    total: 0,
+    pageSize: 10,
 })
 
 onMounted(() => {
-  initSider()
-  getThingList({})
+    initSider()
+    getThingList({})
 })
 
 const initSider = () => {
-  contentData.cData.push({key:'', title:'全部'})
-  listClassificationList().then(res => {
-    res.data.forEach(item=>{
-      item.key = item.categoryId
-      item.title = item.categoryName
-      contentData.cData.push(item)
+    contentData.cData.push({key: '', title: '全部'})
+    listClassificationList().then(res => {
+        res.data.forEach(item => {
+            item.key = item.categoryId
+            item.title = item.categoryName
+            contentData.cData.push(item)
+        })
     })
-  })
-  listTagList().then(res => {
-    contentData.tagData = res.data
-  })
+    listTagList().then(res => {
+        contentData.tagData = res.data
+    })
 }
 
 const getSelectedKey = () => {
-  if (contentData.selectedKeys.length > 0) {
-    return contentData.selectedKeys[0]
-  } else {
-    return -1
-  }
+    if (contentData.selectedKeys.length > 0) {
+        return contentData.selectedKeys[0]
+    } else {
+        return -1
+    }
 }
 
-/* 点击分类*/
+/* 点击古董分类*/
 const onSelect = (selectedKeys) => {
-  contentData.selectedKeys = selectedKeys
-  console.log(contentData.selectedKeys[0])
-  if (contentData.selectedKeys.length > 0) {
-    getThingList({antiqueCategoryId: getSelectedKey()})
-  }
-  contentData.selectTagId = -1
+    contentData.selectedKeys = selectedKeys
+    if (contentData.selectedKeys.length > 0) {
+        getThingList({antiqueCategoryId: getSelectedKey()})
+    }
+    contentData.selectTagId = -1
 }
 
 /* 点击标签*/
 const clickTag = (index) => {
-  contentData.selectedKeys = []
-  contentData.selectTagId = index
-  getThingList({antiqueTag: contentData.selectTagId})
+    contentData.selectedKeys = []
+    contentData.selectTagId = index
+    getThingList({antiqueTag: contentData.selectTagId})
 }
 
 // 最新|最热|推荐
 const selectTab = (index) => {
-  contentData.selectTabIndex = index
-  contentData.tabUnderLeft = 12 + 50 * index
-  console.log(contentData.selectTabIndex)
-  let sort = (index === 0 ? 'recent' : index === 1 ? 'hot' : 'recommend')
-  const data = {sort: sort}
-  if (contentData.selectTagId !== -1) {
-    data['tag'] = contentData.selectTagId
-  } else {
-    data['antiqueCategoryId'] = getSelectedKey()
-  }
-  getThingList(data)
+    contentData.selectTabIndex = index
+    contentData.tabUnderLeft = 12 + 50 * index
+    console.log(contentData.selectTabIndex)
+    let sort = (index === 0 ? 'createTime' : index === 1 ? 'antiquePv' : 'antiqueRecommendCount')
+    const data = {orderByColumn: sort}
+    if (contentData.selectTagId !== -1) {
+        data['tag'] = contentData.selectTagId  // contentData 是页面的state集合
+    } else {
+        // data['antiqueCategoryId'] = getSelectedKey()
+    }
+    getThingList(data)
 }
 const handleDetail = (item) => {
-  // 跳转新页面
-  let text = router.resolve({name: 'detail', query: {antiqueId: item.antiqueId}})
-  window.open(text.href, '_blank')
+    // 跳转新页面
+    let text = router.resolve({name: 'detail', query: {antiqueId: item.antiqueId}})
+    window.open(text.href, '_blank')
 }
 // 分页事件
 const changePage = (page) => {
-  contentData.page = page
-  let start = (contentData.page - 1) * contentData.pageSize
-  contentData.pageData = contentData.thingData.slice(start, start + contentData.pageSize)
-  console.log('第' + contentData.page + '页')
+    contentData.page = page
+
+    // 更改页数重新请求新页的数据
+    getThingList({pageNum:page})
+
+    // let start = (contentData.page - 1) * contentData.pageSize
+    // contentData.pageData = contentData.thingData.slice(start, start + contentData.pageSize)
+    console.log('第' + contentData.page + '页')
 }
 const getThingList = (data) => {
-  contentData.loading = true
-  listThingList(data).then(res => {
-    contentData.loading = false
-    res.data.forEach((item, index) => {
-      if (item.antiqueImg) {
-        // item.cover = BASE_URL + '/api/staticfiles/image/' +  item.cover
-        item.cover = BASE_URL + IMG_BASE +  item.antiqueImg
-      }
+    contentData.loading = true
+    listThingList(data).then(res => {
+        contentData.loading = false
+        res.data.forEach((item, index) => {
+            if (item.antiqueImg) {
+                // item.cover = BASE_URL + '/api/staticfiles/image/' +  item.cover
+                item.cover = BASE_URL + IMG_BASE + item.antiqueImg
+            }
+        })
+        console.log(res)
+        contentData.thingData = res.data
+        contentData.total = res.total
+
+        // 把当前页的数据方式pagedata中
+        contentData.pageData = contentData.thingData
+        // changePage(1)
+    }).catch(err => {
+        console.log(err)
+        contentData.loading = false
     })
-    console.log(res)
-    contentData.thingData = res.data
-    contentData.total = contentData.thingData.length
-    changePage(1)
-  }).catch(err => {
-    console.log(err)
-    contentData.loading = false
-  })
 }
 
 

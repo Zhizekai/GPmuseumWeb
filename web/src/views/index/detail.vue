@@ -148,13 +148,14 @@
                             <div class="thing-item thing-item" v-for="item in recommendData"
                                  @click="handleDetail(item)">
                                 <div class="img-view">
-                                    <img :src="item.cover"></div>
+                                    <img :src="item.cover">
+                                </div>
                                 <div class="info-view">
-                                    <h3 class="thing-name">{{ item.title.substring(0, 12) }}</h3>
+                                    <h3 class="thing-name">{{ item.antiqueName.substring(0, 12) }}</h3>
                                     <span>
-                    <span class="a-price-symbol">¥</span>
-                    <span class="a-price">{{ item.price }}</span>
-                  </span>
+                                        <span class="a-price-symbol">点赞数</span>
+                                        <span class="a-price">{{ item.antiquePraise }}</span>
+                                      </span>
                                 </div>
                             </div>
                         </div>
@@ -210,7 +211,7 @@ onMounted(() => {
     // 从url中获取古董id
     thingId.value = route.query.antiqueId.trim()
     getThingDetail()
-    getRecommendThing()
+    getRecommendThing()  // 获取热门推荐列表
     getCommentList()
 })
 
@@ -223,6 +224,8 @@ const getThingDetail = () => {
     detailApi({antiqueId: thingId.value}).then(res => {
         detailData.value = res.data
         detailData.value.cover = BASE_URL + IMG_BASE + detailData.value.antiqueImg
+
+        console.log("图片", detailData.value)
     }).catch(err => {
         message.error('获取详情失败')
     })
@@ -273,14 +276,15 @@ const handleOrder = (detailData) => {
             }
     })
 }
+
+/* 热门推荐模块*/
 const getRecommendThing = () => {
-    listThingList({sort: 'recommend'}).then(res => {
+    listThingList({orderByColumn: 'antiqueRecommendCount'}).then(res => {
         res.data.forEach((item, index) => {
-            if (item.cover) {
-                item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover
+            if (item.antiqueImg) {
+                item.cover = BASE_URL + IMG_BASE + item.antiqueImg
             }
         })
-        console.log(res)
         recommendData.value = res.data.slice(0, 6)
     }).catch(err => {
         console.log(err)
