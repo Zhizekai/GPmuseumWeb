@@ -2,7 +2,7 @@
     <div class="content">
         <div class="content-left">
             <div class="left-search-item">
-                <h4>宠物分类</h4>
+                <h4>文物分类</h4>
                 <a-tree :tree-data="contentData.cData" :selected-keys="contentData.selectedKeys" @select="onSelect"
                         style="min-height: 220px;">
                 </a-tree>
@@ -93,7 +93,7 @@ onMounted(() => {
 })
 
 const initSider = () => {
-    contentData.cData.push({key: '', title: '全部'})
+    contentData.cData.push({key: -1, title: '全部'})
     listClassificationList().then(res => {
         res.data.forEach(item => {
             item.key = item.categoryId
@@ -116,6 +116,8 @@ const getSelectedKey = () => {
 
 /* 点击古董分类*/
 const onSelect = (selectedKeys) => {
+
+    console.log(selectedKeys)
     contentData.selectedKeys = selectedKeys
     if (contentData.selectedKeys.length > 0) {
         getThingList({antiqueCategoryId: getSelectedKey()})
@@ -130,7 +132,7 @@ const clickTag = (index) => {
     getThingList({antiqueTag: contentData.selectTagId})
 }
 
-// 最新|最热|推荐
+// 最新|最热|推荐 排序选择
 const selectTab = (index) => {
     contentData.selectTabIndex = index
     contentData.tabUnderLeft = 12 + 50 * index
@@ -140,7 +142,7 @@ const selectTab = (index) => {
     if (contentData.selectTagId !== -1) {
         data['tag'] = contentData.selectTagId  // contentData 是页面的state集合
     } else {
-        // data['antiqueCategoryId'] = getSelectedKey()
+        data['antiqueCategoryId'] = getSelectedKey()
     }
     getThingList(data)
 }
@@ -162,6 +164,10 @@ const changePage = (page) => {
 }
 const getThingList = (data) => {
     contentData.loading = true
+
+    if (data !== null && data.antiqueCategoryId === -1){
+        delete data.antiqueCategoryId
+    }
     listThingList(data).then(res => {
         contentData.loading = false
         res.data.forEach((item, index) => {

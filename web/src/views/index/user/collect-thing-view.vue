@@ -1,26 +1,26 @@
 <template>
-  <div class="content-list">
-    <div class="list-title">我的收藏</div>
-    <div role="tablist" class="list-tabs-view flex-view">
-    </div>
-    <div class="list-content">
-      <div class="collect-thing-view">
-        <div class="thing-list flex-view">
-          <div class="thing-item item-column-3" v-for="(item,index) in pageData.collectData" :key="index">
-            <div class="remove" @click="handleRemove(item)">移出</div>
-            <div class="img-view" @click="handleClickItem(item)">
-              <img :src="item.cover">
-            </div>
-            <div class="info-view">
-              <h3 class="thing-name">{{item.title}}</h3>
-              <p class="authors" v-if="item.author">{{item.author}}（作者)</p>
-              <p class="translators" v-if="item.translator">{{item.translator}}（译者）</p>
-            </div>
-          </div>
+    <div class="content-list">
+        <div class="list-title">我的收藏</div>
+        <div role="tablist" class="list-tabs-view flex-view">
         </div>
-      </div>
+        <div class="list-content">
+            <div class="collect-thing-view">
+                <div class="thing-list flex-view">
+                    <div class="thing-item item-column-3" v-for="(item,index) in pageData.collectData" :key="index">
+                        <div class="remove" @click="handleRemove(item)">移出</div>
+                        <div class="img-view" @click="handleClickItem(item)">
+                            <img :src="item.cover">
+                        </div>
+                        <div class="info-view">
+                            <h3 class="thing-name">{{ item.antiqueName }}</h3>
+                            <p class="authors" v-if="item.antiqueAddress">{{ item.antiqueAddress }}（地址)</p>
+                            <!--              <p class="translators" v-if="item.translator">{{item.translator}}（译者）</p>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -33,37 +33,41 @@ const router = useRouter();
 const userStore = useUserStore();
 
 const pageData = reactive({
-  collectData: []
+    collectData: []
 })
 
-onMounted(()=>{
-  getCollectThingList()
-})
-
-const handleClickItem =(record) =>{
-  let text = router.resolve({name: 'detail', query: {antiqueId: record.antiqueId}})
-  window.open(text.href, '_blank')
-}
-const handleRemove =(record)=> {
-  let username = userStore.user_name
-  unCollectApi({id: record.id}).then(res => {
-    message.success('移除成功')
+onMounted(() => {
     getCollectThingList()
-  }).catch(err => {
-    console.log(err)
-  })
+})
+
+const handleClickItem = (record) => {
+    let text = router.resolve({name: 'detail', query: {antiqueId: record.antiqueId}})
+    window.open(text.href, '_blank')
 }
-const getCollectThingList =()=> {
-  let userId = userStore.user_id
-  userCollectListApi({userId: userId}).then(res => {
-    res.data.forEach(item => {
-      item.cover = BASE_URL + IMG_BASE + item.antiqueImg
+
+/* 移除收藏*/
+const handleRemove = (record) => {
+    let username = userStore.user_name
+
+    console.log(record)
+    unCollectApi({collectId: record.collectId}).then(res => {
+        message.success('移除成功')
+        getCollectThingList()
+    }).catch(err => {
+        console.log(err)
     })
-    console.log(res.data)
-    pageData.collectData = res.data
-  }).catch(err => {
-    console.log(err.msg)
-  })
+}
+const getCollectThingList = () => {
+    let userId = userStore.user_id
+    userCollectListApi({userId: userId}).then(res => {
+        res.data.forEach(item => {
+            item.cover = BASE_URL + IMG_BASE + item.antiqueImg
+        })
+        console.log(res.data)
+        pageData.collectData = res.data
+    }).catch(err => {
+        console.log(err.msg)
+    })
 }
 
 </script>
