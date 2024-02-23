@@ -120,15 +120,15 @@
                                     <div class="flex-item flex-view">
                                         <img :src="AvatarIcon" class="avator">
                                         <div class="person">
-                                            <div class="name">{{ item.username }}</div>
-                                            <div class="time">{{ item.commentTime }}</div>
+                                            <div class="name">{{ item.museumUser.userName }}</div>
+                                            <div class="time">{{ item.createTime }}</div>
                                         </div>
                                         <div class="float-right">
                                             <span @click="like(item.commentId)">推荐</span>
                                             <span class="num">{{ item.likeCount }}</span>
                                         </div>
                                     </div>
-                                    <p class="comment-content">{{ item.content }}</p>
+                                    <p class="comment-content">{{ item.commentContent }}</p>
                                 </div>
                                 <div class="infinite-loading-container">
                                     <div class="infinite-status-prompt" style="">
@@ -203,7 +203,7 @@ let selectTabIndex = ref(0)
 let commentData = ref([])
 let recommendData = ref([])
 let sortIndex = ref(0)
-let order = ref('recent') // 默认排序最新
+let order = ref('createTime') // 默认排序最新
 
 let commentRef = ref()
 
@@ -305,7 +305,7 @@ const sendComment = () => {
     commentRef.value.value = ''
     let userId = userStore.user_id
     if (userId) {
-        createCommentApi({content: text, thingId: thingId.value, userId: userId}).then(res => {
+        createCommentApi({commentContent: text, commentAntiqueId: thingId.value, commentUserId: userId}).then(res => {
             getCommentList()
         }).catch(err => {
             console.log(err)
@@ -323,7 +323,7 @@ const like = (commentId) => {
     })
 }
 const getCommentList = () => {
-    listThingCommentsApi({thingId: thingId.value, order: order.value}).then(res => {
+    listThingCommentsApi({antiqueId: thingId.value, orderByColumn: order.value}).then(res => {
         res.data.forEach(item => {
             item.commentTime = getFormatTime(item.commentTime, true)
         })
