@@ -1,4 +1,5 @@
 <template>
+
     <div class="content">
         <div class="content-left">
             <div class="left-search-item">
@@ -58,6 +59,7 @@
 </template>
 
 <script setup>
+/* 文物列表页面*/
 import {listApi as listClassificationList} from '/@/api/classification'
 import {listApi as listTagList} from '/@/api/tag'
 import {listApi as listThingList} from '/@/api/thing'
@@ -154,26 +156,28 @@ const handleDetail = (item) => {
 // 分页事件
 const changePage = (page) => {
     contentData.page = page
-
     // 更改页数重新请求新页的数据
     getThingList({pageNum:page})
-
     // let start = (contentData.page - 1) * contentData.pageSize
     // contentData.pageData = contentData.thingData.slice(start, start + contentData.pageSize)
     console.log('第' + contentData.page + '页')
 }
+
+// 获取古董列表
 const getThingList = (data) => {
     contentData.loading = true
-
     if (data !== null && data.antiqueCategoryId === -1){
         delete data.antiqueCategoryId
     }
+    // 封装分页参数
+    data.pageSize = 9
     listThingList(data).then(res => {
         contentData.loading = false
         res.data.forEach((item, index) => {
             if (item.antiqueImg) {
                 // item.cover = BASE_URL + '/api/staticfiles/image/' +  item.cover
-                item.cover = BASE_URL + IMG_BASE + item.antiqueImg
+                // item.cover = BASE_URL + IMG_BASE + item.antiqueImg // 拼装图片url，数据库里装的是图片不完全路径
+                item.cover = item.antiqueImg
             }
         })
         console.log(res)
