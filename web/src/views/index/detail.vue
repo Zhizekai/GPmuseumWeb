@@ -12,8 +12,8 @@
                             </div>
                             <div class="thing-info-box">
                                 <div class="thing-state">
-                                    <span class="state hidden-sm">宠物状态</span>
-                                    <span>上市销售</span>
+                                    <span class="state hidden-sm">文物状态</span>
+                                    <span>管内展出</span>
                                 </div>
                                 <h1 class="thing-name">{{ detailData.antiqueName }}</h1>
                                 <!--                <span>-->
@@ -21,8 +21,8 @@
                                 <!--                  <span class="a-price">{{detailData.price}}</span>-->
                                 <!--                </span>-->
                                 <div class="translators flex-view" style="">
-                                    <span>性别：</span>
-                                    <span class="name">{{ detailData.antiqueInformation }}</span>
+                                    <span>朝代：</span>
+                                    <span class="name">{{ detailData.categoryName }}</span>
                                 </div>
                                 <div class="translators flex-view" style="">
                                     <span>地址：</span>
@@ -30,7 +30,7 @@
                                 </div>
                                 <button class="buy-btn" @click="handleOrder(detailData)">
                                     <img :src="AddIcon"/>
-                                    <span>立即购买</span>
+                                    <span>立即预约</span>
                                 </button>
                             </div>
                         </div>
@@ -83,13 +83,13 @@
                 <div class="thing-content-view flex-view">
                     <div class="main-content">
                         <div class="order-view main-tab">
-          <span class="tab"
-                :class="selectTabIndex===index? 'tab-select':''"
-                v-for="(item,index) in tabData"
-                :key="index"
-                @click="selectTab(index)">
-            {{ item }}
-          </span>
+                          <span class="tab"
+                                :class="selectTabIndex===index? 'tab-select':''"
+                                v-for="(item,index) in tabData"
+                                :key="index"
+                                @click="selectTab(index)">
+                            {{ item }}
+                          </span>
                             <span :style="{left: tabUnderLeft + 'px'}" class="tab-underline"></span>
                         </div>
 
@@ -154,7 +154,7 @@
                                     <h3 class="thing-name">{{ item.antiqueName.substring(0, 12) }}</h3>
                                     <span>
                                         <span class="a-price-symbol">点赞数</span>
-                                        <span class="a-price">{{ item.antiquePraise }}</span>
+                                        <span class="a-price">{{ item.antiqueCollectCount }}</span>
                                       </span>
                                 </div>
                             </div>
@@ -225,7 +225,6 @@ const getThingDetail = () => {
     detailApi({antiqueId: thingId.value}).then(res => {
         detailData.value = res.data
         // detailData.value.cover = BASE_URL + IMG_BASE + detailData.value.antiqueImg
-        detailData.value.cover = detailData.value.antiqueImg  // 数据库里装的是完整的url，不需要拼接
     }).catch(err => {
         message.error('获取详情失败')
     })
@@ -292,7 +291,7 @@ const getRecommendThing = () => {
 }
 const handleDetail = (item) => {
     // 跳转新页面
-    let text = router.resolve({name: 'detail', query: {id: item.id}})
+    let text = router.resolve({name: 'detail', query: {antiqueId: item.antiqueId}})
     window.open(text.href, '_blank')
 }
 const sendComment = () => {

@@ -8,7 +8,8 @@
                         style="min-height: 220px;">
                 </a-tree>
             </div>
-            <div class="left-search-item"><h4>热门标签</h4>
+            <div class="left-search-item">
+                <h4>热门标签</h4>
                 <div class="tag-view tag-flex-view">
             <span class="tag" :class="{'tag-select': contentData.selectTagId===item.tagId}"
                   v-for="item in contentData.tagData" :key="item.tagId"
@@ -35,7 +36,8 @@
                     <div v-for="item in contentData.pageData" :key="item.antiqueId" @click="handleDetail(item)"
                          class="thing-item item-column-3"><!---->
                         <div class="img-view">
-                            <img :src="item.cover"></div>
+                            <img :src="item.cover">
+                        </div>
                         <div class="info-view">
                             <h3 class="thing-name">{{ item.antiqueName.substring(0, 12) }}</h3>
                             <!--              <span>-->
@@ -157,7 +159,7 @@ const handleDetail = (item) => {
 const changePage = (page) => {
     contentData.page = page
     // 更改页数重新请求新页的数据
-    getThingList({pageNum:page})
+    getThingList({pageNum: page})
     // let start = (contentData.page - 1) * contentData.pageSize
     // contentData.pageData = contentData.thingData.slice(start, start + contentData.pageSize)
     console.log('第' + contentData.page + '页')
@@ -166,7 +168,7 @@ const changePage = (page) => {
 // 获取古董列表
 const getThingList = (data) => {
     contentData.loading = true
-    if (data !== null && data.antiqueCategoryId === -1){
+    if (data !== null && data.antiqueCategoryId === -1) {
         delete data.antiqueCategoryId
     }
     // 封装分页参数
@@ -174,10 +176,9 @@ const getThingList = (data) => {
     listThingList(data).then(res => {
         contentData.loading = false
         res.data.forEach((item, index) => {
-            if (item.antiqueImg) {
+            if (item.cover) {
                 // item.cover = BASE_URL + '/api/staticfiles/image/' +  item.cover
-                // item.cover = BASE_URL + IMG_BASE + item.antiqueImg // 拼装图片url，数据库里装的是图片不完全路径
-                item.cover = item.antiqueImg
+                // item.cover = BASE_URL + IMG_BASE + item.cover // 拼装图片url，数据库里装的是图片不完全路径
             }
         })
         console.log(res)

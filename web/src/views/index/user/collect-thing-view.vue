@@ -60,9 +60,10 @@ const handleRemove = (record) => {
 const getCollectThingList = () => {
     let userId = userStore.user_id
     userCollectListApi({userId: userId}).then(res => {
-        res.data.forEach(item => {
-            item.cover = BASE_URL + IMG_BASE + item.antiqueImg
-        })
+        // 给古董图片添加前缀
+        // res.data.forEach(item => {
+            // item.cover = BASE_URL + IMG_BASE + item.antiqueImg
+        // })
         console.log(res.data)
         pageData.collectData = res.data
     }).catch(err => {
