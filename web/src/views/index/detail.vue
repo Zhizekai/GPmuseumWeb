@@ -168,6 +168,7 @@
     </div>
 </template>
 <script setup>
+/* 文章详情页面*/
 import {message} from "ant-design-vue";
 import Header from '/@/views/index/components/header.vue'
 import Footer from '/@/views/index/components/footer.vue'
@@ -223,9 +224,8 @@ const selectTab = (index) => {
 const getThingDetail = () => {
     detailApi({antiqueId: thingId.value}).then(res => {
         detailData.value = res.data
-        detailData.value.cover = BASE_URL + IMG_BASE + detailData.value.antiqueImg
-
-        console.log("图片", detailData.value)
+        // detailData.value.cover = BASE_URL + IMG_BASE + detailData.value.antiqueImg
+        detailData.value.cover = detailData.value.antiqueImg  // 数据库里装的是完整的url，不需要拼接
     }).catch(err => {
         message.error('获取详情失败')
     })
