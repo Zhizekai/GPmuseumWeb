@@ -8,7 +8,7 @@
         </div>
         <div class="cart-list-view">
           <div class="list-th flex-view">
-            <span class="line-1">宠物名称</span>
+            <span class="line-1">古董名称</span>
             <span class="line-2">价格</span>
             <span class="line-5">数量</span>
             <span class="line-6">操作</span>

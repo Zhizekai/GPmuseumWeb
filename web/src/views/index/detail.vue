@@ -30,7 +30,7 @@
                                 </div>
                                 <button class="buy-btn" @click="handleOrder(detailData)">
                                     <img :src="AddIcon"/>
-                                    <span>立即预约</span>
+                                    <span>立即购买</span>
                                 </button>
                             </div>
                         </div>
@@ -321,8 +321,10 @@ const like = (commentId) => {
         console.log(err)
     })
 }
+
+// 获取评论列表
 const getCommentList = () => {
-    listThingCommentsApi({antiqueId: thingId.value, orderByColumn: order.value}).then(res => {
+    listThingCommentsApi({commentAntiqueId: thingId.value, orderByColumn: order.value}).then(res => {
         res.data.forEach(item => {
             item.commentTime = getFormatTime(item.commentTime, true)
         })

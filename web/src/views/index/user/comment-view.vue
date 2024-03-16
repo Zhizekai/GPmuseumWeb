@@ -1,26 +1,26 @@
 <template>
-  <div class="content-list">
-    <div class="list-title">我的评论</div>
-    <div class="list-content">
-      <div class="comment-view">
-        <a-spin :spinning="loading" style="min-height: 200px;">
-          <div class="comment-list">
-            <div class="comment-item flex-view" v-for="item in commentData">
-              <img :src="item.cover" class="avatar">
-              <div class="infos">
-                <div class="name flex-view">
-                  <h3></h3>
-                  <h3 @click="handleClickTitle(item)">《{{item.title}}》</h3>
-                </div>
-                <div class="time">{{ getFormatTime(item.commentTime, true)}}</div>
-                <div class="content">{{item.content}}</div>
-              </div>
+    <div class="content-list">
+        <div class="list-title">我的评论</div>
+        <div class="list-content">
+            <div class="comment-view">
+                <a-spin :spinning="loading" style="min-height: 200px;">
+                    <div class="comment-list">
+                        <div class="comment-item flex-view" v-for="item in commentData">
+                            <img :src="AvatarIcon" class="avator">
+                            <div class="infos">
+                                <div class="name flex-view">
+                                    <h3></h3>
+                                    <h3 @click="handleClickTitle(item)">《{{ item.museumUser.userName }}》</h3>
+                                </div>
+                                <div class="time">{{ item.createTime }}</div>
+                                <div class="content">{{ item.commentContent }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </a-spin>
             </div>
-          </div>
-        </a-spin>
-      </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -30,35 +30,38 @@ const router = useRouter();
 const userStore = useUserStore();
 
 import {listUserCommentsApi} from '/@/api/comment'
-import {BASE_URL} from "/@/store/constants";
+import {BASE_URL, IMG_BASE} from "/@/store/constants";
 import {getFormatTime} from '/@/utils'
+import AvatarIcon from "/@/assets/images/avatar.jpg";
 
 const loading = ref(false)
 
 const commentData = ref([])
 
-onMounted(()=>{
-  getCommentList()
+onMounted(() => {
+    getCommentList()
 })
 
-const handleClickTitle =(record)=> {
-  let text = router.resolve({name: 'detail', query: {id: record.thingId}})
-  window.open(text.href, '_blank')
+// 跳转到对应古董详情页面
+const handleClickTitle = (record) => {
+    let text = router.resolve({name: 'detail', query: {antiqueId: record.commentAntiqueId}})
+    window.open(text.href, '_blank')
 }
 
-const getCommentList =()=> {
-  loading.value = true
-  let userId = userStore.user_id
-  listUserCommentsApi({userId: userId}).then(res => {
-    res.data.forEach(item => {
-      item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover
+const getCommentList = () => {
+    loading.value = true
+    let userId = userStore.user_id
+    listUserCommentsApi({userId: userId}).then(res => {
+        res.data.forEach(item => {
+            // item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover
+            item.cover = BASE_URL + IMG_BASE + item.antiqueImg
+        })
+        commentData.value = res.data
+        loading.value = false
+    }).catch(err => {
+        message.error(err.msg || '网络异常')
+        loading.value = false
     })
-    commentData.value = res.data
-    loading.value = false
-  }).catch(err => {
-    message.error(err.msg || '网络异常')
-    loading.value = false
-  })
 }
 
 </script>
@@ -67,10 +70,24 @@ const getCommentList =()=> {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+
+
 }
 
 .content-list {
   flex: 1;
+
+
+  .avator {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 40px;
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
 
   .list-title {
     color: #152844;

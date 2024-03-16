@@ -26,8 +26,8 @@
                           v-for="(item,index) in contentData.tabData"
                           :key="index"
                           @click="selectTab(index)">
-            {{ item }}
-          </span>
+                                {{ item }}
+                    </span>
                     <span :style="{left: contentData.tabUnderLeft + 'px'}" class="tab-underline"></span>
                 </div>
             </div>
@@ -133,7 +133,7 @@ const onSelect = (selectedKeys) => {
 const clickTag = (index) => {
     contentData.selectedKeys = []
     contentData.selectTagId = index
-    getThingList({antiqueTag: contentData.selectTagId})
+    getThingList({tagId: contentData.selectTagId})
 }
 
 // 最新|最热|推荐 排序选择
