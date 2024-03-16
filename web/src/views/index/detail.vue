@@ -236,17 +236,26 @@ onMounted(() => {
     );
     camera.position.set(300, 300, 300); //important
 
-    //光源，color:灯光颜色，intensity:光照强度
+    //平行光源，color:灯光颜色，intensity:光照强度
     let directionalLight = new THREE.DirectionalLight('#ffffff', 2.5);
-    directionalLight.position.set(0, 20, 30);
+    directionalLight.position.set(30,30,30)
     scene.add(directionalLight);
 
+    // 多个平行光源，照亮你的世界
+    let directionalLight2 = new THREE.DirectionalLight('#ffffff', 2.5);
+    directionalLight2.position.set(-30,-30,-30)
+    scene.add(directionalLight2);
+
     // 添加环境光
-    let ambient = new THREE.AmbientLight('#ffffff',2);
+    let ambient = new THREE.AmbientLight('#ffffff',4);
     scene.add(ambient); //将环境光添加到场景中
 
+    // let pointLight = new THREE.PointLight(0xffffff, 1, 0);
+    // pointLight.position.set(200, 200, 200); //设置点光源位置
+    // scene.add(pointLight); //将点光源添加至场景
+
     // let geometry = new THREE.BoxGeometry(200, 30, 160);
-    // // 将MeshBasicMaterial修改为MeshLambertMaterial
+    // 将MeshBasicMaterial修改为MeshLambertMaterial
     // const material1 = new THREE.MeshLambertMaterial({ color: 0x64B5D6 });
     // const material2 = new THREE.MeshLambertMaterial({  side: THREE.DoubleSide, color: 0xCED0D1 });
     // // 左           右        上           下        前         后
@@ -275,18 +284,22 @@ onMounted(() => {
     const loader = new GLTFLoader();
     loader.load(
         "/glb/ding_censer_with_an_openwork_cover.glb",
-        // "/glb/red_cra .glb",
+        // "/glb/red_crack.glb",
         (gltf) => {
             // 加载成功后的回调函数
-            const model = gltf.scene;
+            // const ambientLight = new THREE.AmbientLight(0xffffff, 1); // 白光，强度为1
+            // scene.add(ambientLight);
 
-            // const box = new THREE.Box3().setFromObject(model);
-            // const center = box.getCenter(new THREE.Vector3());
+
+            let model = gltf.scene;
+
 
             // 旋转模型
             // let axis = new THREE.Vector3(0, 1, 0);
             // model.rotateOnAxis(axis, Math.PI * 2);
             // model.position.sub(center); // 将模型位置移到原点处
+            // let emissMaterial = new THREE.MeshLambertMaterial({emissiveColor:0xff0000})
+            // model = new THREE.Mesh(model, emissMaterial)
 
             scene.add(model);
         },
@@ -302,6 +315,12 @@ onMounted(() => {
 
     // 渲染场景
     const render = () => {
+        // 防止模型被拉伸变形
+        const canvas = renderer.domElement;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+
+
         renderer.render(scene, camera);
         controls.update();
         requestAnimationFrame(render);
@@ -872,9 +891,10 @@ const sortCommentList = (sortType) => {
   display: flex;
 }
 
+// 模型容器
 .canvas-container {
   width: 800px;
-  height: 500px;
+  height:800px;
 }
 
 .thing-comment {
