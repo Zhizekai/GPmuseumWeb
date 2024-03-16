@@ -55,15 +55,15 @@
         </div>
         <div class="price-view">
           <div class="price-item flex-view">
-            <div class="item-name">宠物总价</div>
+            <div class="item-name">古董总价</div>
             <div class="price-txt">¥{{ pageData.amount }}</div>
           </div>
           <div class="price-item flex-view">
-            <div class="item-name">宠物优惠</div>
+            <div class="item-name">古董优惠</div>
             <div class="price-txt">¥0</div>
           </div>
           <div class="price-item flex-view">
-            <div class="item-name">宠物折扣</div>
+            <div class="item-name">古董折扣</div>
             <div class="price-txt">¥0</div>
           </div>
           <div class="total-price-view flex-view">

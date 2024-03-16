@@ -98,6 +98,9 @@
                             <p class="text" style="">{{ detailData.antiqueInformation }}</p>
                         </div>
 
+<!-- 3d 展示                        -->
+                        <div class="canvas-container" ref="screenDom"></div>
+
                         <!--评论-->
                         <div class="thing-comment" :class="selectTabIndex > 0? '':'hide'">
                             <div class="title">发表新的评论</div>
@@ -190,9 +193,16 @@ import {useRoute, useRouter} from "vue-router/dist/vue-router";
 import {useUserStore} from "/@/store";
 import {getFormatTime} from "/@/utils";
 
+// threejs 组件
+import * as THREE from "three";
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
+import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
+
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore();
+let screenDom = ref();
+let camera, scene, renderer, controls, ambientLight
 
 
 let thingId = ref('')
@@ -214,7 +224,108 @@ onMounted(() => {
     getThingDetail()
     getRecommendThing()  // 获取热门推荐列表
     getCommentList()
+
+    // 初始化threejs 对象
+    scene = new THREE.Scene();
+    // 创建相机
+    camera = new THREE.PerspectiveCamera(
+        50,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        2000
+    );
+    camera.position.set(300, 300, 300); //important
+
+    //光源，color:灯光颜色，intensity:光照强度
+    let directionalLight = new THREE.DirectionalLight('#ffffff', 2.5);
+    directionalLight.position.set(0, 20, 30);
+    scene.add(directionalLight);
+
+    // 添加环境光
+    let ambient = new THREE.AmbientLight('#ffffff',2);
+    scene.add(ambient); //将环境光添加到场景中
+
+    // let geometry = new THREE.BoxGeometry(200, 30, 160);
+    // // 将MeshBasicMaterial修改为MeshLambertMaterial
+    // const material1 = new THREE.MeshLambertMaterial({ color: 0x64B5D6 });
+    // const material2 = new THREE.MeshLambertMaterial({  side: THREE.DoubleSide, color: 0xCED0D1 });
+    // // 左           右        上           下        前         后
+    // let materialArry = [material1, material1,material2, material1, material1, material1];
+    // const mesh = new THREE.Mesh(geometry, materialArry);
+    // mesh.castShadow = true; // cast投射，方块投射阴影
+    // mesh.receiveShadow = true; // 物体接收阴影
+    // scene.add(mesh);
+
+    // 创建渲染器
+    renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setClearColor(new THREE.Color("#4a559b"));
+    renderer.setSize(screenDom.value.clientWidth, screenDom.value.clientHeight);
+    renderer.domElement.addEventListener("click", onClick, false);
+    screenDom.value.appendChild(renderer.domElement);
+    // 创建轨道
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.enablePan = true;  // 右键拖拽
+    controls.enableZoom = true;
+    controls.autoRotate = false;
+    controls.autoRotateSpeed = 9;
+    controls.update(); //重新设置轨道，相当于刷新
+
+    //添加模型
+    const loader = new GLTFLoader();
+    loader.load(
+        "/glb/ding_censer_with_an_openwork_cover.glb",
+        // "/glb/red_cra .glb",
+        (gltf) => {
+            // 加载成功后的回调函数
+            const model = gltf.scene;
+
+            // const box = new THREE.Box3().setFromObject(model);
+            // const center = box.getCenter(new THREE.Vector3());
+
+            // 旋转模型
+            // let axis = new THREE.Vector3(0, 1, 0);
+            // model.rotateOnAxis(axis, Math.PI * 2);
+            // model.position.sub(center); // 将模型位置移到原点处
+
+            scene.add(model);
+        },
+        (xhr) => {
+            // 加载过程中的回调函数
+            console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        },
+        (error) => {
+            // 加载失败的回调函数
+            console.error("Failed to load model", error);
+        }
+    );
+
+    // 渲染场景
+    const render = () => {
+        renderer.render(scene, camera);
+        controls.update();
+        requestAnimationFrame(render);
+    };
+    render();
+
+
 })
+
+const onClick = () => {
+    event.preventDefault();
+    const mouse = new THREE.Vector2();
+    const rect = screenDom.value.getBoundingClientRect()
+    mouse.x = ((event.clientX + rect.left) / window.innerWidth) * 2 - 1;
+    mouse.y = -((event.clientY + rect.top) / window.innerHeight) * 2 + 1;
+    console.log("x:" + mouse.x, "y:" + mouse.y);
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, camera);
+    var intersects = raycaster.intersectObjects(scene.children); //array
+    if (intersects.length > 0) {
+        var selectedObject = intersects[0];
+        console.log(selectedObject.object.name);
+    }
+}
 
 const selectTab = (index) => {
     selectTabIndex.value = index
@@ -759,6 +870,11 @@ const sortCommentList = (sortType) => {
 
 .flex-view {
   display: flex;
+}
+
+.canvas-container {
+  width: 800px;
+  height: 500px;
 }
 
 .thing-comment {
