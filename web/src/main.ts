@@ -7,10 +7,13 @@ import bootstrap from './core/bootstrap';
 import '/@/styles/reset.less';
 import '/@/styles/index.less';
 import Antd from 'ant-design-vue';
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 
 const app = createApp(App);
 
 app.use(Antd);
+app.use(ElementPlus)
 app.use(router);
 app.use(piniaStore);
 app.use(bootstrap);

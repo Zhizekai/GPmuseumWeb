@@ -30,10 +30,40 @@
                                 </div>
                                 <button class="buy-btn" @click="handleOrder(detailData)">
                                     <img :src="AddIcon"/>
-                                    <span>立即购买</span>
+                                    <span>立即预约</span>
                                 </button>
                             </div>
                         </div>
+
+                        <el-dialog v-model="dialogFormVisible" title="预约参观" width="500">
+                            <el-form :model="form">
+                                <el-form-item label="电话号码" :label-width="formLabelWidth" :rules="[
+                                                { required: true, message: '请输入电话号码' },
+                                                { type: 'number', message: '请输入电话号码' },
+                                              ]">
+                                    <el-input v-model="form.phoneNum" autocomplete="off"/>
+                                </el-form-item>
+                                <el-form-item label="预约展馆" :label-width="formLabelWidth">
+                                    {{ detailData.antiqueAddress }}
+                                </el-form-item>
+                                <el-form-item label="参观时间" :label-width="formLabelWidth" :required="true">
+                                    <el-date-picker
+                                            v-model="form.appointmentDate"
+                                            type="datetime"
+                                            value-format="YYYY-MM-DD HH:mm:ss"
+                                            placeholder="选择预约日期"
+                                    />
+                                </el-form-item>
+                            </el-form>
+                            <template #footer>
+                                <div class="dialog-footer">
+                                    <el-button @click="dialogFormVisible = false">取消</el-button>
+                                    <el-button type="primary" @click="confirmAppointment()">
+                                        确定
+                                    </el-button>
+                                </div>
+                            </template>
+                        </el-dialog>
                         <div class="thing-counts hidden-sm">
                             <div class="count-item flex-view pointer" @click="addToWish()">
                                 <div class="count-img">
@@ -98,7 +128,7 @@
                             <p class="text" style="">{{ detailData.antiqueInformation }}</p>
                         </div>
 
-<!-- 3d 展示                        -->
+                        <!-- 3d 展示                        -->
                         <div class="canvas-container" ref="screenDom"></div>
 
                         <!--评论-->
@@ -188,6 +218,7 @@ import {
 import {listThingCommentsApi, createApi as createCommentApi, likeApi} from '/@/api/comment'
 import {wishApi} from '/@/api/thingWish'
 import {collectApi} from '/@/api/thingCollect'
+import {addAppointmentApi} from '/@/api/appointment'
 import {BASE_URL, IMG_BASE} from "/@/store/constants";
 import {useRoute, useRouter} from "vue-router/dist/vue-router";
 import {useUserStore} from "/@/store";
@@ -217,6 +248,19 @@ let sortIndex = ref(0)
 let order = ref('createTime') // 默认排序最新
 
 let commentRef = ref()
+const value1 = ref('')
+
+
+const dialogTableVisible = ref(false)
+const dialogFormVisible = ref(false)
+const formLabelWidth = '140px'
+
+const form = reactive({
+    userId: userStore.user_id,
+    phoneNum: '',
+    region: '',
+    appointmentDate: '',
+})
 
 onMounted(() => {
     // 从url中获取古董id
@@ -238,16 +282,16 @@ onMounted(() => {
 
     //平行光源，color:灯光颜色，intensity:光照强度
     let directionalLight = new THREE.DirectionalLight('#ffffff', 2.5);
-    directionalLight.position.set(30,30,30)
+    directionalLight.position.set(30, 30, 30)
     scene.add(directionalLight);
 
     // 多个平行光源，照亮你的世界
     let directionalLight2 = new THREE.DirectionalLight('#ffffff', 2.5);
-    directionalLight2.position.set(-30,-30,-30)
+    directionalLight2.position.set(-30, -30, -30)
     scene.add(directionalLight2);
 
     // 添加环境光
-    let ambient = new THREE.AmbientLight('#ffffff',4);
+    let ambient = new THREE.AmbientLight('#ffffff', 4);
     scene.add(ambient); //将环境光添加到场景中
 
     // let pointLight = new THREE.PointLight(0xffffff, 1, 0);
@@ -330,6 +374,19 @@ onMounted(() => {
 
 })
 
+// 提交预定
+const confirmAppointment = () => {
+    form.region = detailData.value.antiqueAddress
+    addAppointmentApi(form).then((res) => {
+        console.log(res)
+        message.success("预约成功")
+        dialogFormVisible.value = false
+
+    }).catch(() => {
+        message.error('预约失败')
+    })
+    console.log(form)
+}
 const onClick = () => {
     event.preventDefault();
     const mouse = new THREE.Vector2();
@@ -392,18 +449,23 @@ const share = () => {
     window.open(shareHref)
 }
 const handleOrder = (detailData) => {
-    console.log(detailData)
-    const userId = userStore.user_id
-    router.push({
-        name: 'confirm',
-        query:
-            {
-                id: detailData.id,
-                title: detailData.title,
-                cover: detailData.cover,
-                price: detailData.price
-            }
-    })
+    let userId = userStore.user_id
+    if (userId) {
+        dialogFormVisible.value = true
+    } else {
+        message.warn('请先登录')
+    }
+    // const userId = userStore.user_id
+    // router.push({
+    //     name: 'confirm',
+    //     query:
+    //         {
+    //             id: detailData.id,
+    //             title: detailData.title,
+    //             cover: detailData.cover,
+    //             price: detailData.price
+    //         }
+    // })
 }
 
 /* 热门推荐模块*/
@@ -894,7 +956,7 @@ const sortCommentList = (sortType) => {
 // 模型容器
 .canvas-container {
   width: 800px;
-  height:800px;
+  height: 800px;
 }
 
 .thing-comment {

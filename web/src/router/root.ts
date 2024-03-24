@@ -49,9 +49,14 @@ const constantRouterMap = [
       {
         path: 'usercenter',
         name: 'usercenter',
-        redirect: '/index/usercenter/addressView',
+        redirect: '/index/usercenter/appointmentView',
         component: () => import('/@/views/index/usercenter.vue'),
         children: [
+          {
+            path: 'appointmentView',
+            name: 'appointmentView',
+            component: () => import('/@/views/index/user/appointmentView.vue')
+          },
           {
             path: 'addressView',
             name: 'addressView',
@@ -116,7 +121,7 @@ const constantRouterMap = [
             path: 'messageView',
             name: 'messageView',
             component: () => import('/@/views/index/user/message-view.vue')
-          },
+          }
         ]
       }
     ]
